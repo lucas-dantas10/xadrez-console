@@ -1,8 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using board;
 
-Position p;
+Board b = new(8, 8);
 
-p = new(1, 1);
-
-System.Console.WriteLine($"Position: {p}");
+System.Console.WriteLine(b);
