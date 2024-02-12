@@ -4,13 +4,18 @@ namespace board
     {
         public int rows { get; set; }
         public int columns { get; set; }
-        private Piece[,] pieces;
+        private readonly Piece[,] pieces;
 
         public Board(int rows, int columns) 
         {
             this.rows = rows;
             this.columns = columns;
-            this.pieces = new Piece[rows, columns];
+            pieces = new Piece[rows, columns];
+        }
+
+        public Piece GetPiece(int row, int column)
+        {
+            return pieces[row, column];
         }
     }
 }
