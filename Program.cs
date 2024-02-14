@@ -3,9 +3,11 @@ using board;
 using chess;
 using xadrez_console;
 
-ChessPosition cp = new('c', 7);
+Board b = new(8, 8);
 
-System.Console.WriteLine(cp);
-System.Console.WriteLine(cp.ToPosition());
+b.SetPiece(new Tower(b, Color.Black), new Position(0, 0));
+b.SetPiece(new King(b, Color.White), new Position(1, 0));
+
+Screen.PrintBoard(b);
 
 Console.ReadLine();
