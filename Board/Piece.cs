@@ -2,17 +2,17 @@ namespace board
 {
     class Piece 
     {
-        public Position? position { get; set; }
-        public Color color { get; protected set; }
-        public Board board { get; protected set; }
-        public int quantityMoves { get; protected set; }
+        public Position? Position { get; set; }
+        public Color Color { get; protected set; }
+        public Board Board { get; protected set; }
+        public int QuantityMoves { get; protected set; }
 
         public Piece(Board board, Color color)
         {
-            this.position = null;
-            this.board = board;
-            this.color = color;
-            this.quantityMoves = 0;
+            Position = null;
+            Board = board;
+            Color = color;
+            QuantityMoves = 0;
         }
     } 
 }

@@ -1,19 +1,13 @@
 namespace board 
 {
-    class Position 
+    class Position(int row, int column)
     {
-        public int row;
-        public int column;
-
-        public Position(int row, int column)
-        {
-            this.row = row;
-            this.column = column;
-        }
+        public int Row = row;
+        public int Column = column;
 
         public override string ToString()
         {
-            return $"{this.row}, {this.column}";
+            return $"{Row}, {Column}";
         }
     }
 }

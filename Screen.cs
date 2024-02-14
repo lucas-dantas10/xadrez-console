@@ -6,9 +6,9 @@ namespace xadrez_console
     {
         public static void PrintBoard(Board board)
         {
-            for (int row = 0; row < board.rows ; row++) 
+            for (int row = 0; row < board.Rows ; row++) 
             {
-                for (int col = 0; col < board.columns; col++)
+                for (int col = 0; col < board.Columns; col++)
                 {
                     if (board.GetPiece(new Position(row, col)) == null) 
                     {
