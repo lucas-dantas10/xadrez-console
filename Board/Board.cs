@@ -58,7 +58,7 @@ namespace board
             }
         }
 
-        private bool ValidPosition(Position position)
+        public bool ValidPosition(Position position)
         {
             if (position.Row < 0 || position.Row >= Rows || position.Column < 0 || position.Column >= Columns)
             {
