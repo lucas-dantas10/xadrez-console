@@ -3,11 +3,28 @@ using board;
 using chess;
 using xadrez_console;
 
-Board b = new(8, 8);
+try 
+{
+    ChessMatch match = new();
 
-b.SetPiece(new Tower(b, Color.Black), new Position(0, 0));
-b.SetPiece(new King(b, Color.White), new Position(1, 0));
+    while (!match.Finished) 
+    {
+        Console.Clear();
+        Screen.PrintBoard(match.Board);
 
-Screen.PrintBoard(b);
+        Console.WriteLine();
+        Console.Write("Origem: ");
+        Position origin = Screen.ReadChessPosition().ToPosition();
+
+        Console.Write("Destino: ");
+        Position destination = Screen.ReadChessPosition().ToPosition();
+
+        match.PerformMovement(origin, destination);
+    }
+}
+catch (Exception e) 
+{
+    Console.WriteLine(e.Message);
+}
 
 Console.ReadLine();
