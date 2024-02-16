@@ -1,4 +1,5 @@
 using board;
+using board.exception;
 
 namespace chess 
 {
@@ -6,14 +7,13 @@ namespace chess
     {
         public Board Board { get; private set; }
         public bool Finished { get; private set; } = false;
-        private int _turn; 
-        private Color _currentPlayer;
+        public int Turn { get; private set; } 
+        public Color CurrentPlayer { get; private set; } = Color.White;
 
         public ChessMatch()
         {
             Board = new Board(8, 8);
-            _turn = 1;
-            _currentPlayer = Color.White;
+            Turn = 1;
             PlacePieces();
         }
 
@@ -23,6 +23,45 @@ namespace chess
             piece.IncreaseMovement();
             Piece capturedPiece = Board.RemovePiece(destination);
             Board.SetPiece(piece, destination);
+        }
+
+        public void PlayGame(Position origin, Position destination)
+        {
+            PerformMovement(origin, destination);
+            Turn++;
+            ChangePlayer();
+        }
+
+        public void ValidateOriginPosition(Position pos)
+        {
+            Piece currentPiece = Board.GetPiece(pos) ?? throw new BoardException("There is no piece in the original position");
+
+            if (CurrentPlayer != currentPiece.Color)
+                throw new BoardException("The original piece chosen is not yours!");
+            
+            if (!currentPiece.ExistPossiblesMovements())
+                throw new BoardException("There are no movements possible for the original piece");
+            
+        }
+
+        public void ValidateDestinationPosition(Position origin, Position destination)
+        {
+            Piece currentPiece = Board.GetPiece(origin);
+
+            if (!currentPiece.CanMoveTo(destination))
+                throw new BoardException("Destination position invalid!");         
+        }
+
+        private void ChangePlayer()
+        {
+            if (CurrentPlayer == Color.White)
+            {
+                CurrentPlayer = Color.Black;
+            } 
+            else 
+            {
+                 CurrentPlayer = Color.White;
+            }
         }
 
         private void PlacePieces()

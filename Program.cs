@@ -1,33 +1,49 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using board;
+using board.exception;
 using chess;
 using xadrez_console;
 
-try 
+try
 {
     ChessMatch match = new();
 
-    while (!match.Finished) 
+    while (!match.Finished)
     {
-        Console.Clear();
-        Screen.PrintBoard(match.Board);
+        try
+        {
+            Console.Clear();
+            Screen.PrintBoard(match.Board);
+            Console.WriteLine();
+            Console.WriteLine("Turno: " + match.Turn);
+            Console.WriteLine("Aguardando jogada: " + match.CurrentPlayer);
 
-        Console.WriteLine();
-        Console.Write("Origem: ");
-        Position origin = Screen.ReadChessPosition().ToPosition();
+            Console.WriteLine();
+            Console.Write("Origem: ");
+            Position origin = Screen.ReadChessPosition().ToPosition();
+            match.ValidateOriginPosition(origin);
 
-        bool[,] possibleMovements = match.Board.GetPiece(origin).PossiblesMovement();
-        Console.Clear();
-        Screen.PrintBoard(match.Board, possibleMovements);
+            bool[,] possibleMovements = match.Board.GetPiece(origin).PossiblesMovement();
+            Console.Clear();
+            Screen.PrintBoard(match.Board, possibleMovements);
 
-        Console.WriteLine();
-        Console.Write("Destino: ");
-        Position destination = Screen.ReadChessPosition().ToPosition();
+            Console.WriteLine();
+            Console.Write("Destino: ");
+            Position destination = Screen.ReadChessPosition().ToPosition();
+            match.ValidateDestinationPosition(origin, destination);
 
-        match.PerformMovement(origin, destination);
+            match.PlayGame(origin, destination);
+        }
+        catch (BoardException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.ReadLine();
+        }
+
+
     }
 }
-catch (Exception e) 
+catch (Exception e)
 {
     Console.WriteLine(e.Message);
 }
