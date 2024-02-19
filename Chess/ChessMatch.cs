@@ -9,11 +9,15 @@ namespace chess
         public bool Finished { get; private set; } = false;
         public int Turn { get; private set; } 
         public Color CurrentPlayer { get; private set; } = Color.White;
+        private HashSet<Piece> _pieces;
+        private HashSet<Piece> _capturedPieces;
 
         public ChessMatch()
         {
             Board = new Board(8, 8);
             Turn = 1;
+            _pieces = new HashSet<Piece>();
+            _capturedPieces = new HashSet<Piece>();
             PlacePieces();
         }
 
@@ -23,6 +27,11 @@ namespace chess
             piece.IncreaseMovement();
             Piece capturedPiece = Board.RemovePiece(destination);
             Board.SetPiece(piece, destination);
+
+            if (capturedPiece != null) 
+            {
+                _capturedPieces.Add(capturedPiece);
+            }
         }
 
         public void PlayGame(Position origin, Position destination)
@@ -30,6 +39,44 @@ namespace chess
             PerformMovement(origin, destination);
             Turn++;
             ChangePlayer();
+        }
+
+         public void SetNewPiece(char column, int row, Piece piece)
+        {
+            Board.SetPiece(piece, new ChessPosition(column, row).ToPosition());
+            _pieces.Add(piece);
+        }
+
+        public HashSet<Piece> CapturedPieces(Color color)
+        {
+            HashSet<Piece> aux = [];
+
+            foreach (Piece x in _capturedPieces)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+
+            return aux;
+        }
+
+        public HashSet<Piece> PiecesInPlay(Color color)
+        {
+            HashSet<Piece> aux = [];
+
+            foreach (Piece x in _capturedPieces)
+            {
+                if (x.Color == color)
+                {
+                    aux.Add(x);
+                }
+            }
+
+            aux.ExceptWith(CapturedPieces(color));
+
+            return aux;
         }
 
         public void ValidateOriginPosition(Position pos)
@@ -66,19 +113,19 @@ namespace chess
 
         private void PlacePieces()
         {
-            Board.SetPiece(new Tower(Board, Color.White), new ChessPosition('c', 1).ToPosition());
-            Board.SetPiece(new King(Board, Color.White), new ChessPosition('d', 1).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.White), new ChessPosition('e', 1).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.White), new ChessPosition('c', 2).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.White), new ChessPosition('d', 2).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.White), new ChessPosition('e', 2).ToPosition());
+            SetNewPiece('c', 1, new Tower(Board, Color.White));
+            SetNewPiece('d', 1, new King(Board, Color.White));
+            SetNewPiece('e', 1, new Tower(Board, Color.White));
+            SetNewPiece('c', 2, new Tower(Board, Color.White));
+            SetNewPiece('d', 2, new Tower(Board, Color.White));
+            SetNewPiece('e', 2, new Tower(Board, Color.White));
 
-            Board.SetPiece(new Tower(Board, Color.Black), new ChessPosition('c', 8).ToPosition());
-            Board.SetPiece(new King(Board, Color.Black), new ChessPosition('d', 8).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.Black), new ChessPosition('e', 8).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.Black), new ChessPosition('c', 7).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.Black), new ChessPosition('d', 7).ToPosition());
-            Board.SetPiece(new Tower(Board, Color.Black), new ChessPosition('e', 7).ToPosition());
+            SetNewPiece('c', 8, new Tower(Board, Color.Black));
+            SetNewPiece('d', 8, new King(Board, Color.Black));
+            SetNewPiece('e', 8, new Tower(Board, Color.Black));
+            SetNewPiece('c', 7, new Tower(Board, Color.Black));
+            SetNewPiece('d', 7, new Tower(Board, Color.Black));
+            SetNewPiece('e', 7, new Tower(Board, Color.Black));
         }
     }
 }
