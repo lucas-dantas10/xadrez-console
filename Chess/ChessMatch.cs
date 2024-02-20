@@ -1,3 +1,4 @@
+using System.Reflection.PortableExecutable;
 using board;
 using board.exception;
 
@@ -9,6 +10,7 @@ namespace chess
         public bool Finished { get; private set; } = false;
         public int Turn { get; private set; } 
         public Color CurrentPlayer { get; private set; } = Color.White;
+        public bool Check { get; private set; } = false;
         private HashSet<Piece> _pieces;
         private HashSet<Piece> _capturedPieces;
 
@@ -21,7 +23,7 @@ namespace chess
             PlacePieces();
         }
 
-        public void PerformMovement(Position origin, Position destination)
+        public Piece PerformMovement(Position origin, Position destination)
         {
             Piece piece = Board.RemovePiece(origin);
             piece.IncreaseMovement();
@@ -32,11 +34,44 @@ namespace chess
             {
                 _capturedPieces.Add(capturedPiece);
             }
+
+            return capturedPiece;
+        }
+
+        public void UndoMovement(Position origin, Position destination, Piece capturedPiece)
+        {
+            Piece p = Board.RemovePiece(destination);
+            p.DecrementMovement();
+
+            if (capturedPiece != null)
+            {
+                Board.SetPiece(capturedPiece, destination);
+                _capturedPieces.Remove(capturedPiece);
+            }
+
+            Board.SetPiece(p, origin);
         }
 
         public void PlayGame(Position origin, Position destination)
         {
-            PerformMovement(origin, destination);
+            Piece capturedPiece = PerformMovement(origin, destination);
+
+            if (IsInCheck(CurrentPlayer))
+            {
+                UndoMovement(origin, destination, capturedPiece);
+                throw new BoardException("You can't put yourself in check");
+            }
+
+            if (IsInCheck(Opponent(CurrentPlayer)))
+            {
+                Check = true;
+            } 
+            else 
+            {
+                Check = false;
+            }
+
+
             Turn++;
             ChangePlayer();
         }
@@ -66,7 +101,7 @@ namespace chess
         {
             HashSet<Piece> aux = [];
 
-            foreach (Piece x in _capturedPieces)
+            foreach (Piece x in _pieces)
             {
                 if (x.Color == color)
                 {
@@ -97,6 +132,47 @@ namespace chess
 
             if (!currentPiece.CanMoveTo(destination))
                 throw new BoardException("Destination position invalid!");         
+        }
+
+        public bool IsInCheck(Color color)
+        {
+            Piece R = GetKing(color) ?? throw new BoardException($"There is no king of color {color}");
+
+            foreach (Piece piece in PiecesInPlay(Opponent(color)))
+            {
+                bool [,] mat = piece.PossiblesMovement();
+                if (mat[R.Position.Row, R.Position.Column])
+                {
+                    return true;
+                }
+            }
+
+             return false;
+        }
+
+        private Color Opponent(Color color)
+        {
+            if (color == Color.White)
+            {
+                return Color.Black;
+            }
+            else 
+            {
+                return Color.White;
+            }
+        } 
+
+        private Piece GetKing(Color color)
+        {
+            foreach (Piece piece in PiecesInPlay(color))
+            {
+                if (piece is King)
+                {
+                    return piece;
+                }
+            }
+
+            return null;
         }
 
         private void ChangePlayer()

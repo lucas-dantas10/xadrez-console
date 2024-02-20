@@ -36,5 +36,10 @@ namespace board
         {
             QuantityMoves++;
         }
+
+        public void DecrementMovement()
+        {
+            QuantityMoves--;
+        }
     } 
 }
