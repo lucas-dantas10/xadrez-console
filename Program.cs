@@ -39,6 +39,9 @@ try
 
 
     }
+
+    Console.Clear();
+    Screen.PrintMatch(match);
 }
 catch (Exception e)
 {
