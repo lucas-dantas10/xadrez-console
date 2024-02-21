@@ -136,7 +136,7 @@ namespace chess
         {
             Piece currentPiece = Board.GetPiece(origin);
 
-            if (!currentPiece.CanMoveTo(destination))
+            if (!currentPiece.PossibleMovement(destination))
                 throw new BoardException("Destination position invalid!");         
         }
 
@@ -228,25 +228,25 @@ namespace chess
 
         private void PlacePieces()
         {
-            SetNewPiece('c', 1, new Tower(Board, Color.White));
-            SetNewPiece('d', 1, new King(Board, Color.White));
-            SetNewPiece('h', 7, new Tower(Board, Color.White));
-
-            SetNewPiece('a', 8, new King(Board, Color.Black));
-            SetNewPiece('b', 8, new Tower(Board, Color.Black));
             // SetNewPiece('c', 1, new Tower(Board, Color.White));
             // SetNewPiece('d', 1, new King(Board, Color.White));
-            // SetNewPiece('e', 1, new Tower(Board, Color.White));
-            // SetNewPiece('c', 2, new Tower(Board, Color.White));
-            // SetNewPiece('d', 2, new Tower(Board, Color.White));
-            // SetNewPiece('e', 2, new Tower(Board, Color.White));
+            // SetNewPiece('h', 7, new Tower(Board, Color.White));
 
-            // SetNewPiece('c', 8, new Tower(Board, Color.Black));
-            // SetNewPiece('d', 8, new King(Board, Color.Black));
-            // SetNewPiece('e', 8, new Tower(Board, Color.Black));
-            // SetNewPiece('c', 7, new Tower(Board, Color.Black));
-            // SetNewPiece('d', 7, new Tower(Board, Color.Black));
-            // SetNewPiece('e', 7, new Tower(Board, Color.Black));
+            // SetNewPiece('a', 8, new King(Board, Color.Black));
+            // SetNewPiece('b', 8, new Tower(Board, Color.Black));
+            SetNewPiece('c', 1, new Tower(Board, Color.White));
+            SetNewPiece('d', 1, new King(Board, Color.White));
+            SetNewPiece('e', 1, new Tower(Board, Color.White));
+            SetNewPiece('c', 2, new Tower(Board, Color.White));
+            SetNewPiece('d', 2, new Tower(Board, Color.White));
+            SetNewPiece('e', 2, new Tower(Board, Color.White));
+
+            SetNewPiece('c', 8, new Tower(Board, Color.Black));
+            SetNewPiece('d', 8, new King(Board, Color.Black));
+            SetNewPiece('e', 8, new Tower(Board, Color.Black));
+            SetNewPiece('c', 7, new Tower(Board, Color.Black));
+            SetNewPiece('d', 7, new Tower(Board, Color.Black));
+            SetNewPiece('e', 7, new Tower(Board, Color.Black));
         }
     }
 }
