@@ -36,6 +36,28 @@ namespace chess
                 _capturedPieces.Add(capturedPiece);
             }
 
+            int originCalculated = origin.Column + 2;
+
+            // #special move 'roque pequeno'
+            if (piece is King && destination.Column == originCalculated)
+            {
+                Position originTower = new(origin.Row, origin.Column + 3);
+                Position destinationTower = new(origin.Row, origin.Column + 1);
+                Piece tower = Board.RemovePiece(originTower);
+                tower.IncreaseMovement();
+                Board.SetPiece(tower, destinationTower);
+            }
+
+            // #special move 'roque grande'
+            if (piece is King && destination.Column == origin.Column - 2)
+            {
+                Position originTower = new(origin.Row, origin.Column - 4);
+                Position destinationTower = new(origin.Row, origin.Column - 1);
+                Piece tower = Board.RemovePiece(originTower);
+                tower.IncreaseMovement();
+                Board.SetPiece(tower, destinationTower);
+            }
+
             return capturedPiece;
         }
 
@@ -51,6 +73,26 @@ namespace chess
             }
 
             Board.SetPiece(p, origin);
+
+            // #special move 'roque pequeno'
+            if (p is King && destination.Column == origin.Column + 2)
+            {
+                Position originTower = new(origin.Row, origin.Column + 3);
+                Position destinationTower = new(origin.Row, origin.Column + 1);
+                Piece tower = Board.RemovePiece(destinationTower);
+                tower.DecrementMovement();
+                Board.SetPiece(tower, originTower);
+            }
+
+            // #special move 'roque grande'
+            if (p is King && destination.Column == origin.Column - 2)
+            {
+                Position originTower = new(origin.Row, origin.Column - 4);
+                Position destinationTower = new(origin.Row, origin.Column - 1);
+                Piece tower = Board.RemovePiece(destinationTower);
+                tower.DecrementMovement();
+                Board.SetPiece(tower, originTower);
+            }
         }
 
         public void PlayGame(Position origin, Position destination)
@@ -232,7 +274,7 @@ namespace chess
             SetNewPiece('b', 1, new Knight(Board, Color.White));
             SetNewPiece('c', 1, new Bishop(Board, Color.White));
             SetNewPiece('d', 1, new Queen(Board, Color.White));
-            SetNewPiece('e', 1, new King(Board, Color.White));
+            SetNewPiece('e', 1, new King(Board, Color.White, this));
             SetNewPiece('f', 1, new Bishop(Board, Color.White));
             SetNewPiece('g', 1, new Knight(Board, Color.White));
             SetNewPiece('h', 1, new Tower(Board, Color.White));
@@ -249,7 +291,7 @@ namespace chess
             SetNewPiece('b', 8, new Knight(Board, Color.Black));
             SetNewPiece('c', 8, new Bishop(Board, Color.Black));
             SetNewPiece('d', 8, new Queen(Board, Color.Black));
-            SetNewPiece('e', 8, new King(Board, Color.Black));
+            SetNewPiece('e', 8, new King(Board, Color.Black, this));
             SetNewPiece('f', 8, new Bishop(Board, Color.Black));
             SetNewPiece('g', 8, new Knight(Board, Color.Black));
             SetNewPiece('h', 8, new Tower(Board, Color.Black));
